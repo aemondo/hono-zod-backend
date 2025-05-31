@@ -1,6 +1,3 @@
-import { z } from "zod/v4";
+import { DealSchema } from "./deal";
 
-export const dealSchema = z.object({
-  name: z.string().min(1),
-  email: z.email(),
-});
+export const dealUpdateSchema = DealSchema.omit({ createdAt: true, id: true });

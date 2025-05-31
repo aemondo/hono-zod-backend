@@ -4,13 +4,14 @@ import {
   toDealInsert,
   type DealInsert,
 } from "./dealsSchema";
-import type { Deal } from "../deal";
+
 import db from "../../db/database";
 import { eq } from "drizzle-orm/sql";
 import { HTTPException } from "hono/http-exception";
+import type { Deal } from "../deal";
 
 class DealsRepository {
-  async createDeal(deal: DealInsert) {
+  async createDeal(deal: DealInsert): Promise<Deal> {
     const result = await db
       .insert(dealsTable)
       .values(toDealInsert(deal))
@@ -23,7 +24,7 @@ class DealsRepository {
     return await this.getDealById(result[0].id);
   }
 
-  async getDealById(id: number) {
+  async getDealById(id: number): Promise<Deal> {
     const result = await db.query.dealsTable.findFirst({
       where: eq(dealsTable.id, id),
     });
@@ -35,13 +36,13 @@ class DealsRepository {
     return toDeal(result);
   }
 
-  async getDeals() {
+  async getDeals(): Promise<Deal[]> {
     const result = await db.query.dealsTable.findMany();
 
     return result.map(toDeal);
   }
 
-  async updateDeal(id: number, deal: DealInsert) {
+  async updateDeal(id: number, deal: DealInsert): Promise<Deal> {
     await db
       .update(dealsTable)
       .set(toDealInsert(deal))
@@ -49,7 +50,7 @@ class DealsRepository {
     return await this.getDealById(id);
   }
 
-  async deleteDeal(id: number) {
+  async deleteDeal(id: number): Promise<void> {
     await db.delete(dealsTable).where(eq(dealsTable.id, id));
   }
 }

@@ -1,10 +1,17 @@
-import { mysqlTable, serial, varchar, timestamp } from "drizzle-orm/mysql-core";
+import {
+  mysqlTable,
+  serial,
+  varchar,
+  timestamp,
+  int,
+} from "drizzle-orm/mysql-core";
 import type { Deal } from "../deal";
 
 export const dealsTable = mysqlTable("deals_table", {
   id: serial().primaryKey(),
   name: varchar({ length: 255 }).notNull(),
   email: varchar({ length: 255 }).notNull().unique(),
+  amount: int("amount").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
@@ -16,6 +23,7 @@ export const toDeal = (dealSelect: DealSelect): Deal => {
     id: dealSelect.id,
     name: dealSelect.name,
     email: dealSelect.email,
+    amount: dealSelect.amount,
     createdAt: dealSelect.createdAt,
   };
 };
@@ -26,6 +34,7 @@ export const toDealInsert = (
   const drizzleInsert: DealInsert = {
     name: deal.name,
     email: deal.email,
+    amount: deal.amount,
   };
   return drizzleInsert;
 };
