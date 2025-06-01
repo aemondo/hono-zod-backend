@@ -4,7 +4,7 @@ export const DealSchema = z.object({
   id: z.number(),
   name: z.string(),
   email: z.string().email(),
-  amount: z.number().positive(),
+  amount: z.number().positive().default(0),
   createdAt: z.date(),
 });
 
